@@ -8,20 +8,23 @@ if args.Length > 0 then
 
 type Direction = Left of int | Right of int | Failure
 
+type DialPosition = DialPosition of int
+let mutable counter = 0
+let mutable roundsC = 0
+let mutable dialPosition : DialPosition = DialPosition 50
+
 let int2DialPositionNumber (value : int): int =
         printfn "Input: %d" value
         let rounds = value / 100
         printfn "Rounds: %d" rounds
+        roundsC <- abs( rounds ) + roundsC
         let moves = value-rounds * 100
         if value < 0 then
+            let unwrapIntFromDialPosition dialPosition
+            let newDialPosition = 100 + moves
             100 + moves
         else
             moves
-
-type DialPosition = DialPosition of int
-
-let mutable counter = 0
-let mutable dialPosition : DialPosition = DialPosition 50
 
 let unwrapIntFromDialPosition dial : int =
     match dial with
@@ -69,4 +72,4 @@ for line in lines do
     counter <- count + counter
     dialPosition <- DialPosition dial
 
-printfn "%d" counter
+printfn "%d" (counter + roundsC)

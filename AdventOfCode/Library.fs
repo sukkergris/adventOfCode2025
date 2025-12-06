@@ -1,5 +1,9 @@
 ﻿namespace AdventOfCode
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
+module DeScrambler =
+    let start = 50;
+    let dialSize = 100;
+    let fileName = "TestData/x.txt"
+
+    let loadLines2Array = System.IO.File.ReadAllLines(fileName)
+
