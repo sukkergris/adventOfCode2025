@@ -60,35 +60,26 @@ module DeScrambler =
             // dialSize=100, n= -1004 -> 96
             (n % dialSize + dialSize) % dialSize
 
-    // let (+) (DialPosition pos) direction =
-    //     let multiplier =
-    //         match direction with
-    //         | Right _ -> 1
-    //         | Left _ -> -1
-    //     let magnitude = unwrapDirection direction
-    //     let moves = magnitude % dialSize
-    //     DialPosition (toDialPosition (pos + multiplier * moves))
     let getNextDialPosition (start: int) (direction: Direction) (crossedZeroCount: int) : MoveResult =
-
         let x  =
             match direction with
             | Right value ->
-                let endPosition = value |> toDialPosition
+                let endPosition = (start + value) |> toDialPosition
                 let rounds = value / dialSize
-                let crossedZero = start + value > dialSize
+                let efficientMoves = value - rounds * dialSize
+                let crossedZero = start + efficientMoves > dialSize
                 endPosition, rounds + crossedZeroCount, crossedZero
 
             | Left value ->
-                let endPosition = - value |> toDialPosition
-                let rounds = value / dialSize
                 let correctedStart = if start = dialStart then dialSize else start
-                let crossedZero = correctedStart - value < 0
-
+                let endPosition = (correctedStart - value) |> toDialPosition
+                let rounds = value / dialSize
+                let efficientMoves = value - rounds * dialSize
+                let crossedZero = correctedStart - efficientMoves < 0
                 endPosition, rounds + crossedZeroCount, crossedZero
-        let endPosition, dialRounds,crossedZero = x
-
+        let endPosition, dialRounds, crossedZero = x
         {
-            Rounds = if crossedZero then  1 + dialRounds else dialRounds
+            Rounds = if crossedZero then 1 + dialRounds else dialRounds
             Position = endPosition
         }
     let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (crossedZeroCount: int) : MoveResult =
@@ -108,9 +99,9 @@ module DeScrambler =
     let rec deScrambleMessages (startPosition: int) (moves: Direction list) (stoppedOnZeroCount: int) (parsedZeroCount: int) : DialResult =
         match moves with
         | head :: tail ->
-            let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove
+            // let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove
 
-            // let positionAfterMove = getNextDialPosition startPosition head parsedZeroCount
+            let positionAfterMove = getNextDialPosition startPosition head parsedZeroCount
 
             let updatedCount =
                 if positionAfterMove.Position = dialStart then stoppedOnZeroCount + 1 else stoppedOnZeroCount

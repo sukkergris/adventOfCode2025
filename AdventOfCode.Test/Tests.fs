@@ -96,4 +96,42 @@ let ``Calculate new dial position after move from example`` () =
     Assert.Equal(55, R60.Position)
     Assert.Equal(2, R60.Rounds)
 
+[<Theory>]
+[<InlineData(10, 91, 0, 1, 1)>]
+[<InlineData(50, 50, 0, 0, 1)>]
+[<InlineData(99, 1, 0, 0, 1)>]
+[<InlineData(99, 2, 0, 1, 1)>]
+[<InlineData(0, 100, 0, 0, 2)>]
+[<InlineData(50, 150, 0, 0, 2)>]
+let ``getNextDialPosition moves right correctly`` (start: int, move: int, initialRounds: int, expectedPos: int, expectedRounds: int) =
+    let result = getNextDialPosition start (Right move) initialRounds
+    Assert.Equal(expectedPos, result.Position)
+    Assert.Equal(expectedRounds, result.Rounds)
+
+[<Theory>]
+[<InlineData(10, 91, 0, 19, 1)>]
+[<InlineData(50, 50, 0, 0, 1)>]
+[<InlineData(1, 1, 0, 0, 1)>]
+[<InlineData(1, 2, 0, 99, 1)>]
+[<InlineData(0, 1, 0, 99, 1)>]
+[<InlineData(50, 150, 0, 0, 2)>]
+let ``getNextDialPosition moves left correctly`` (start: int, move: int, initialRounds: int, expectedPos: int, expectedRounds: int) =
+    let result = getNextDialPosition start (Left move) initialRounds
+    Assert.Equal(expectedPos, result.Position)
+    Assert.Equal(expectedRounds, result.Rounds)
+
+[<Fact>]
+let ``getNextDialPosition tracks rounds through multiple moves`` () =
+    let move1 = getNextDialPosition 50 (Left 68) 0
+    Assert.Equal(82, move1.Position)
+    Assert.Equal(1, move1.Rounds)
+
+    let move2 = getNextDialPosition move1.Position (Left 30) move1.Rounds
+    Assert.Equal(52, move2.Position)
+    Assert.Equal(1, move2.Rounds)
+
+    let move3 = getNextDialPosition move2.Position (Right 48) move2.Rounds
+    Assert.Equal(0, move3.Position)
+    Assert.Equal(1, move3.Rounds)
+
 
