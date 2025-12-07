@@ -18,6 +18,21 @@ let ``From string to direction`` () =
     Assert.Equal(Right 321, right)
 
 [<Theory>]
+[<InlineData(50, -20, false)>]
+[<InlineData(50,20, false)>]
+[<InlineData(99,1,false)>]
+[<InlineData(99,2, true)>]
+[<InlineData(1, -2, true)>]
+[<InlineData(0, -1, false)>]
+[<InlineData(0, -99, false)>]
+[<InlineData(0,-100, false)>]
+let ``Didn't pass zero`` (start: int, move: int, expected: bool) =
+    let direction =
+        if move >= 0 then move |> Right else -move |> Left
+    let didParseZeroWhileMove = parsingZeroDuringMove start direction
+    Assert.Equal(expected, didParseZeroWhileMove)
+
+[<Theory>]
 [<InlineData(50, 50, 0)>]
 [<InlineData(50, 150, 0)>]
 [<InlineData(50, -50, 0)>]
@@ -59,10 +74,4 @@ let ``Calculate new dial position after move from example`` () =
     Assert.Equal(55, R60.Position)
     Assert.Equal(2, R60.Rounds)
 
-[<Fact>]
-let ``Dial left`` () =
-    let direction = Left 20
-    Assert.True(
-        match direction with
-        | Left _ -> true
-        | _ -> false)
+
