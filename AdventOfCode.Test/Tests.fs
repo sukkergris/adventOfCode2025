@@ -7,13 +7,13 @@ open AdventOfCode.DeScrambler
 [<Fact>]
 let ``Load data from txt`` () =
 
-    let x = loadLines2List "TestData/x.txt"
+    let x = loadLinesFromFile "TestData/x.txt"
     Assert.Equal<int>(10, x.Length)
 
 [<Fact>]
 let ``From string to direction`` () =
-    let left = "L123" |> string2Direction
-    let right = "R321" |> string2Direction
+    let left = "L123" |> parseDirection
+    let right = "R321" |> parseDirection
     Assert.Equal<Direction>(Left 123, left)
     Assert.Equal(Right 321, right)
 

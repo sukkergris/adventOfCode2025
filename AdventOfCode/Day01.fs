@@ -1,23 +1,22 @@
 ﻿namespace AdventOfCode
 
 module DeScrambler =
-    let start = 50
     let dialSize = 100
 
     type Direction =
         | Left of int
         | Right of int
 
-    let loadLines2List (path: string) : string list =
+    let loadLinesFromFile (path: string) : string list =
         System.IO.File.ReadAllLines path |> Array.toList
 
-    let string2int (chars: char list) =
+    let parseInt (chars: char list) =
         chars |> System.String.Concat |> int
 
-    let string2Direction (input: string) =
+    let parseDirection (input: string) =
         match input |> List.ofSeq with
-        | 'R' :: tail -> tail |> string2int |> Right
-        | 'L' :: tail -> tail |> string2int |> Left
+        | 'R' :: tail -> tail |> parseInt |> Right
+        | 'L' :: tail -> tail |> parseInt |> Left
         | _ -> "Epic failure" |> System.Exception |> raise
 
     let unwrapDirection direction =
@@ -26,15 +25,18 @@ module DeScrambler =
         | Left l -> l
 
     let loadMoves (list: string list) : Direction list =
-        list |> List.map string2Direction
+        list |> List.map parseDirection
 
-    type NewResult = { Rounds: int; Position: int }
-    type Result = { Count: int; Position: int; Rounds: int }
+    type MoveResult = { Rounds: int; Position: int }
+    type DialResult = { Count: int; Position: int; Rounds: int }
+    let decomposeMove direction =
+        let magnitude = unwrapDirection direction
+        let dialRounds = magnitude / dialSize
+        let efficientDialMove = magnitude - dialRounds * dialSize
+        dialRounds, efficientDialMove
 
     let crossingZero start direction : bool =
-        let unwrapped = unwrapDirection direction
-        let rounds = unwrapped / dialSize
-        let moves = unwrapped - (rounds * dialSize)
+        let _, moves = decomposeMove direction
 
         match direction with
         | Right _ -> start + moves > dialSize
@@ -48,11 +50,9 @@ module DeScrambler =
             // dialSize=100, n= -1004 -> 96
             (n % dialSize + dialSize) % dialSize
 
-    let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (completedRounds: int) : NewResult =
+    let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (crossedZeroCount: int) : MoveResult =
 
-        let unwrapped = unwrapDirection direction
-        let rounds = unwrapped / dialSize
-        let moves = unwrapped - (rounds * dialSize)
+        let dialRounds, moves = decomposeMove direction
         let multiplier dir : int =
             match dir with
             | Right _ -> 1
@@ -60,29 +60,24 @@ module DeScrambler =
 
         let createResult (start: int) (direction: Direction) (rounds: int) (moves: int) =
             let passed0 = crossingZero start direction
-
             {
-                Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds
+                Rounds = if passed0 then crossedZeroCount + 1 + rounds else crossedZeroCount + rounds
                 Position = multiplier direction * moves + start |> toDialPosition
             }
+        createResult start direction dialRounds moves
 
-        match direction with
-        | Right _ -> createResult start direction rounds moves
-        | Left _ -> createResult start direction rounds moves
-
-    let rec countDialsStoppedOnPositionZero (startPosition: int) (moves: Direction list) (numberOfIterationsAggregated: int) (numberOfTimesPassedZero: int) : Result =
-        // printfn "Passed zero count: %d" numberOfTimesPassedZero
+    let rec deScrambleMessages (startPosition: int) (moves: Direction list) (stoppedOnZeroCount: int) (parsedZeroCount: int) : DialResult =
         match moves with
         | head :: tail ->
-            let positionAfterMove = (startPosition, head, numberOfTimesPassedZero) |||> calculateNewDialPositionAfterMove
+            let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove
 
             let updatedCount =
-                if positionAfterMove.Position = 0 then numberOfIterationsAggregated + 1 else numberOfIterationsAggregated
+                if positionAfterMove.Position = 0 then stoppedOnZeroCount + 1 else stoppedOnZeroCount
 
-            countDialsStoppedOnPositionZero positionAfterMove.Position tail updatedCount positionAfterMove.Rounds
+            deScrambleMessages positionAfterMove.Position tail updatedCount positionAfterMove.Rounds
 
         | [] ->
-            { Count = numberOfIterationsAggregated
+            { Count = stoppedOnZeroCount
               Position = startPosition
-              Rounds = numberOfTimesPassedZero }
+              Rounds = parsedZeroCount }
 
