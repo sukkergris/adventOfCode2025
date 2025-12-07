@@ -41,12 +41,12 @@ module DeScrambler =
         | Left _ ->
             let correctedStart = if start = 0 then dialSize else start
             correctedStart - moves < 0
-    let normalize n =
-            // Ensure result stays within the dial size eg. dial size 100 values will remain in bounds [0..99]
-            if n > dialSize then
-                "Can't normalize a value greater than the size of the dial" |> System.Exception |> raise
-            else
-            ((n % dialSize) + dialSize) % dialSize
+    let toDialPosition n =
+            // Ensure result stays within the dial size eg. dial size 100 values [-R;R] will remain in bounds [0..99]
+            // dialSize=100, n=321 -> 21
+            // dialSize=100, n=1 -> 1
+            // dialSize=100, n= -1004 -> 96
+            (n % dialSize + dialSize) % dialSize
 
     let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (completedRounds: int) : NewResult =
 
@@ -63,7 +63,7 @@ module DeScrambler =
 
             {
                 Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds
-                Position = multiplier direction * moves + start |> normalize
+                Position = multiplier direction * moves + start |> toDialPosition
             }
 
         match direction with

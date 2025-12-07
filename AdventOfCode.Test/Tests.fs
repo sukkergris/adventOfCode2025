@@ -18,6 +18,28 @@ let ``From string to direction`` () =
     Assert.Equal(Right 321, right)
 
 [<Theory>]
+[<InlineData(0, 0)>]
+[<InlineData(1, 1)>]
+[<InlineData(50, 50)>]
+[<InlineData(99, 99)>]
+[<InlineData(100, 0)>]
+[<InlineData(101, 1)>]
+[<InlineData(150, 50)>]
+[<InlineData(200, 0)>]
+[<InlineData(321, 21)>]
+[<InlineData(-1, 99)>]
+[<InlineData(-50, 50)>]
+[<InlineData(-99, 1)>]
+[<InlineData(-100, 0)>]
+[<InlineData(-101, 99)>]
+[<InlineData(-150, 50)>]
+[<InlineData(-200, 0)>]
+[<InlineData(-1004, 96)>]
+let ``toDialPosition wraps any integer to valid dial range`` (input: int, expected: int) =
+    let result = toDialPosition input
+    Assert.Equal(expected, result)
+
+[<Theory>]
 [<InlineData(50, -20, false)>]
 [<InlineData(50,20, false)>]
 [<InlineData(99,1,false)>]
@@ -29,7 +51,7 @@ let ``From string to direction`` () =
 let ``Didn't pass zero`` (start: int, move: int, expected: bool) =
     let direction =
         if move >= 0 then move |> Right else -move |> Left
-    let didParseZeroWhileMove = parsingZeroDuringMove start direction
+    let didParseZeroWhileMove = crossingZero start direction
     Assert.Equal(expected, didParseZeroWhileMove)
 
 [<Theory>]
