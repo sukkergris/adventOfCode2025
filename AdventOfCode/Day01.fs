@@ -2,6 +2,7 @@
 
 module DeScrambler =
     let dialSize = 100
+    let dialStart = dialSize - dialSize
 
     type Direction =
         | Left of int
@@ -41,7 +42,7 @@ module DeScrambler =
         match direction with
         | Right _ -> start + moves > dialSize
         | Left _ ->
-            let correctedStart = if start = 0 then dialSize else start
+            let correctedStart = if start = dialStart then dialSize else start
             correctedStart - moves < 0
     let toDialPosition n =
             // Ensure result stays within the dial size eg. dial size 100 values [-R;R] will remain in bounds [0..99]
@@ -58,13 +59,11 @@ module DeScrambler =
             | Right _ -> 1
             | Left _ -> -1
 
-        let createResult (start: int) (direction: Direction) (rounds: int) (moves: int) =
-            let passed0 = crossingZero start direction
-            {
-                Rounds = if passed0 then crossedZeroCount + 1 + rounds else crossedZeroCount + rounds
-                Position = multiplier direction * moves + start |> toDialPosition
-            }
-        createResult start direction dialRounds moves
+        let passed0 = crossingZero start direction
+        {
+            Rounds = if passed0 then crossedZeroCount + 1 + dialRounds else crossedZeroCount + dialRounds
+            Position = multiplier direction * moves + start |> toDialPosition
+        }
 
     let rec deScrambleMessages (startPosition: int) (moves: Direction list) (stoppedOnZeroCount: int) (parsedZeroCount: int) : DialResult =
         match moves with
@@ -72,7 +71,7 @@ module DeScrambler =
             let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove
 
             let updatedCount =
-                if positionAfterMove.Position = 0 then stoppedOnZeroCount + 1 else stoppedOnZeroCount
+                if positionAfterMove.Position = dialStart then stoppedOnZeroCount + 1 else stoppedOnZeroCount
 
             deScrambleMessages positionAfterMove.Position tail updatedCount positionAfterMove.Rounds
 
