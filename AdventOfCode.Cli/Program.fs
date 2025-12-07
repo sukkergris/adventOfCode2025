@@ -1,8 +1,10 @@
 ﻿open AdventOfCode.DeScrambler
 // For more information see https://aka.ms/fsharp-console-apps
-printfn "Hello from F#"
 
-let moves = "./d01-input.txt" |> loadLinesFromFile |> loadMoves
+let inputFile = "./x.txt" //"./d01-input.txt"
+printfn "De scrambling %s" inputFile
+
+let moves = inputFile |> loadLinesFromFile |> loadMoves
 
 printfn "Moves: %d" moves.Length
 

@@ -98,11 +98,11 @@ let ``Calculate new dial position after move from example`` () =
 
 [<Theory>]
 [<InlineData(10, 91, 0, 1, 1)>]
-[<InlineData(50, 50, 0, 0, 1)>]
-[<InlineData(99, 1, 0, 0, 1)>]
+[<InlineData(50, 50, 0, 0, 0)>]
+[<InlineData(99, 1, 0, 0, 0)>]
 [<InlineData(99, 2, 0, 1, 1)>]
-[<InlineData(0, 100, 0, 0, 2)>]
-[<InlineData(50, 150, 0, 0, 2)>]
+[<InlineData(0, 100, 0, 0, 1)>]
+[<InlineData(50, 150, 0, 0, 1)>]
 let ``getNextDialPosition moves right correctly`` (start: int, move: int, initialRounds: int, expectedPos: int, expectedRounds: int) =
     let result = getNextDialPosition start (Right move) initialRounds
     Assert.Equal(expectedPos, result.Position)
@@ -110,11 +110,11 @@ let ``getNextDialPosition moves right correctly`` (start: int, move: int, initia
 
 [<Theory>]
 [<InlineData(10, 91, 0, 19, 1)>]
-[<InlineData(50, 50, 0, 0, 1)>]
-[<InlineData(1, 1, 0, 0, 1)>]
+[<InlineData(50, 50, 0, 0, 0)>]
+[<InlineData(1, 1, 0, 0, 0)>]
 [<InlineData(1, 2, 0, 99, 1)>]
-[<InlineData(0, 1, 0, 99, 1)>]
-[<InlineData(50, 150, 0, 0, 2)>]
+[<InlineData(0, 1, 0, 99, 0)>]
+[<InlineData(50, 150, 0, 0, 1)>]
 let ``getNextDialPosition moves left correctly`` (start: int, move: int, initialRounds: int, expectedPos: int, expectedRounds: int) =
     let result = getNextDialPosition start (Left move) initialRounds
     Assert.Equal(expectedPos, result.Position)

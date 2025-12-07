@@ -59,6 +59,15 @@ module DeScrambler =
             // dialSize=100, n=1 -> 1
             // dialSize=100, n= -1004 -> 96
             (n % dialSize + dialSize) % dialSize
+    let crossed0 start direction rounds =
+        match direction with
+            | Right value ->
+                let efficientMoves = value - rounds * dialSize
+                start + efficientMoves > dialSize
+            | Left value ->
+                let efficientMoves = value - rounds * dialSize
+                start - efficientMoves < dialStart
+
 
     let getNextDialPosition (start: int) (direction: Direction) (crossedZeroCount: int) : MoveResult =
         let x  =
@@ -66,16 +75,14 @@ module DeScrambler =
             | Right value ->
                 let endPosition = (start + value) |> toDialPosition
                 let rounds = value / dialSize
-                let efficientMoves = value - rounds * dialSize
-                let crossedZero = start + efficientMoves > dialSize
+                let crossedZero = crossed0 start direction rounds
                 endPosition, rounds + crossedZeroCount, crossedZero
 
             | Left value ->
                 let correctedStart = if start = dialStart then dialSize else start
                 let endPosition = (correctedStart - value) |> toDialPosition
                 let rounds = value / dialSize
-                let efficientMoves = value - rounds * dialSize
-                let crossedZero = correctedStart - efficientMoves < 0
+                let crossedZero = crossed0 correctedStart direction rounds
                 endPosition, rounds + crossedZeroCount, crossedZero
         let endPosition, dialRounds, crossedZero = x
         {
@@ -99,7 +106,7 @@ module DeScrambler =
     let rec deScrambleMessages (startPosition: int) (moves: Direction list) (stoppedOnZeroCount: int) (parsedZeroCount: int) : DialResult =
         match moves with
         | head :: tail ->
-            // let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove
+            // let positionAfterMove = (startPosition, head, parsedZeroCount) |||> calculateNewDialPositionAfterMove // Old
 
             let positionAfterMove = getNextDialPosition startPosition head parsedZeroCount
 
