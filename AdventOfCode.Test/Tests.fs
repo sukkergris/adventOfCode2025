@@ -31,8 +31,33 @@ let ``From string to direction`` () =
 let ``Ensure we always end on 0 on a 100 sized dial`` (start:int, move:int, expected:int) =
     let direction =
         if move >= 0 then move |> Right else -move |> Left
-    let result = calculateNewDialPositionAfterMove start direction
-    Assert.Equal(expected, result)
+    let result = calculateNewDialPositionAfterMove start direction 0
+    Assert.Equal(expected, result.Position)
+
+[<Fact>]
+let ``Calculate new dial position after move`` () =
+    let rm91 = (10, Right 91, 0) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(1, rm91.Position)
+    let lm91 = (10, Left 91, 0) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(19, lm91.Position)
+
+[<Fact>]
+let ``Calculate new dial position after move from example`` () =
+    let L68 = (50, Left 68, 0) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(82, L68.Position)
+    Assert.Equal(1, L68.Rounds)
+    let L30 = (L68.Position, Left 30, L68.Rounds) |||> calculateNewDialPositionAfterMove
+    Assert.Equal( 52, L30.Position)
+    Assert.Equal(1, L30.Rounds)
+    let R48 = (L30.Position, Right 48, L30.Rounds) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(0, R48.Position)
+    Assert.Equal(1, R48.Rounds)
+    let L5 = (R48.Position, Left 5, R48.Rounds) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(95, L5.Position)
+    Assert.Equal(1, L5.Rounds)
+    let R60 = (L5.Position, Right 60, L5.Rounds) |||> calculateNewDialPositionAfterMove
+    Assert.Equal(55, R60.Position)
+    Assert.Equal(2, R60.Rounds)
 
 [<Fact>]
 let ``Dial left`` () =

@@ -8,10 +8,10 @@ module DeScrambler =
     type Direction = Left of int | Right of int
     let loadLines2Array (path : string) : string list = System.IO.File.ReadAllLines(path) |> Array.toList
 
-    let unwrapIntFromDialPosition (dial : Direction) : int=
+    let unwrapIntFromDialPosition (dial : Direction) : string=
         match dial with
-            | Right value -> value
-            | Left value -> value
+            | Right value -> sprintf "Move %d right" value
+            | Left value -> sprintf "Move %d left" value
 
     let string2int ( chars: char list) = chars|> System.String.Concat |> int
     let string2Direction (input: string) =
@@ -22,31 +22,45 @@ module DeScrambler =
 
     let loadMoves (list: string list) : list<Direction> =
         List.map (fun x-> x |> string2Direction ) list
-
-
-    let calculateNewDialPositionAfterMove (start: int) (direction: Direction) : int =
+    type NewResult = {Rounds: int; Position: int }
+    type Result = { Count: int; Position: int; Rounds: int }
+    let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (completedRounds: int): NewResult =
         let normalize n =
             // Ensure result stays in [0..99]
             ((n % 100) + 100) % 100
+        printfn $"Start: {start}, Direction: {unwrapIntFromDialPosition direction}, Completed rounds: {completedRounds}"
+
         match direction with
             | Right r ->
                 let rounds = r / 100
                 let moves = r - (rounds * 100)
-                moves + start |> normalize
+                let passed0 = start + moves > 100
+                {
+                    Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds;
+                    Position = moves + start |> normalize
+                }
             | Left l ->
                 let rounds = l / 100
                 let moves = l - (rounds * 100)
-                start - moves |> normalize
-
-    type Result = { Count: int; Position: int }
-    let rec countDialsStoppedOnPositionZero (startPosition: int) ( moves: list<Direction>) (numberOfIterationsAggregated: int) : Result =
+                let correctedStart = if start = 0 then 100 else start
+                let passed0 = correctedStart - moves < 0
+                {
+                    Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds;
+                    Position = start - moves |> normalize
+                }
+    let rec countDialsStoppedOnPositionZero (startPosition: int) ( moves: list<Direction>) (numberOfIterationsAggregated: int) (numberOfTimesPassedZero: int): Result =
+        printfn "Passed zero count: %d" numberOfTimesPassedZero
         match moves with
             | head :: tail ->
-                let positionAfterMove = (startPosition, head)||> calculateNewDialPositionAfterMove
-                printfn "Position after move: %d" positionAfterMove
+                let positionAfterMove = (startPosition, head, numberOfTimesPassedZero)|||> calculateNewDialPositionAfterMove
+                printfn "Position after move: %d" positionAfterMove.Position
+                printfn "Rounds after move %d" positionAfterMove.Rounds
+                printfn "Passed zero: %d" numberOfIterationsAggregated
+                printfn "------"
+
                 let updatedCount =
-                    if positionAfterMove = 0 then numberOfIterationsAggregated + 1
+                    if positionAfterMove.Position = 0 then numberOfIterationsAggregated + 1
                     else numberOfIterationsAggregated
-                (positionAfterMove ,tail, updatedCount)|||>countDialsStoppedOnPositionZero
-            | [] -> { Count = numberOfIterationsAggregated; Position = startPosition }
+                countDialsStoppedOnPositionZero positionAfterMove.Position tail updatedCount positionAfterMove.Rounds
+            | [] -> { Count = numberOfIterationsAggregated; Position = startPosition; Rounds = numberOfTimesPassedZero }
 
