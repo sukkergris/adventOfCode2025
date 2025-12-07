@@ -31,7 +31,7 @@ module DeScrambler =
     type NewResult = { Rounds: int; Position: int }
     type Result = { Count: int; Position: int; Rounds: int }
 
-    let parsingZeroDuringMove start direction : bool =
+    let crossingZero start direction : bool =
         let unwrapped = unwrapDirection direction
         let rounds = unwrapped / dialSize
         let moves = unwrapped - (rounds * dialSize)
@@ -41,26 +41,29 @@ module DeScrambler =
         | Left _ ->
             let correctedStart = if start = 0 then dialSize else start
             correctedStart - moves < 0
+    let normalize n =
+            // Ensure result stays within the dial size eg. dial size 100 values will remain in bounds [0..99]
+            if n > dialSize then
+                "Can't normalize a value greater than the size of the dial" |> System.Exception |> raise
+            else
+            ((n % dialSize) + dialSize) % dialSize
 
     let calculateNewDialPositionAfterMove (start: int) (direction: Direction) (completedRounds: int) : NewResult =
-        let normalize n =
-            // Ensure result stays in [0..99]
-            ((n % 100) + 100) % 100
 
         let unwrapped = unwrapDirection direction
         let rounds = unwrapped / dialSize
         let moves = unwrapped - (rounds * dialSize)
-        let dir direction : int =
-            match direction with
+        let multiplier dir : int =
+            match dir with
             | Right _ -> 1
             | Left _ -> -1
 
         let createResult (start: int) (direction: Direction) (rounds: int) (moves: int) =
-            let passed0 = parsingZeroDuringMove start direction
+            let passed0 = crossingZero start direction
 
             {
                 Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds
-                Position = dir direction * moves + start |> normalize
+                Position = multiplier direction * moves + start |> normalize
             }
 
         match direction with
