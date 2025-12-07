@@ -48,19 +48,19 @@ module DeScrambler =
         let unwrapped = unwrapDirection direction
         let rounds = unwrapped / 100
         let moves = unwrapped - (rounds * 100)
+        let dir direction : int = match direction with | Right _ -> 1 | Left _ -> -1
+
+        let createResult (start:int)( direction :Direction) (rounds:int) (moves:int) =
+            let passed0 = parsingZeroDuringMove start direction
+
+            {
+                    Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds;
+                    Position = dir direction * moves + start |> normalize
+            }
+
         match direction with
-            | Right r ->
-                let passed0 = parsingZeroDuringMove start direction
-                {
-                    Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds;
-                    Position = moves + start |> normalize
-                }
-            | Left l ->
-                let passed0 = parsingZeroDuringMove start direction
-                {
-                    Rounds = if passed0 then completedRounds + 1 + rounds else completedRounds + rounds;
-                    Position = start - moves |> normalize
-                }
+            | Right r -> createResult start direction rounds moves
+            | Left l -> createResult start direction rounds moves
     let rec countDialsStoppedOnPositionZero (startPosition: int) ( moves: list<Direction>) (numberOfIterationsAggregated: int) (numberOfTimesPassedZero: int): Result =
         // printfn "Passed zero count: %d" numberOfTimesPassedZero
         match moves with
