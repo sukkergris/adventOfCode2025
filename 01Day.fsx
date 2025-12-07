@@ -12,7 +12,9 @@ type DialPosition = DialPosition of int
 let mutable counter = 0
 let mutable roundsC = 0
 let mutable dialPosition : DialPosition = DialPosition 50
-
+let unwrapIntFromDialPosition dial : int =
+    match dial with
+        | DialPosition value -> value
 let int2DialPositionNumber (value : int): int =
         printfn "Input: %d" value
         let rounds = value / 100
@@ -20,15 +22,11 @@ let int2DialPositionNumber (value : int): int =
         roundsC <- abs( rounds ) + roundsC
         let moves = value-rounds * 100
         if value < 0 then
-            let unwrapIntFromDialPosition dialPosition
+            let ff = unwrapIntFromDialPosition  dialPosition
             let newDialPosition = 100 + moves
-            100 + moves
+            newDialPosition
         else
             moves
-
-let unwrapIntFromDialPosition dial : int =
-    match dial with
-        | DialPosition value -> value
 let tailString2DialPositionNumber (chars: char list) : int =
     chars |> System.String.Concat |> int |> int2DialPositionNumber
 let rec plotZeroMatched line (start :DialPosition) count: int * int =
