@@ -7,7 +7,7 @@ open AdventOfCode.DeScrambler
 [<Fact>]
 let ``Load data from txt`` () =
 
-    let x = loadLines2Array "TestData/x.txt"
+    let x = loadLines2List "TestData/x.txt"
     Assert.Equal<int>(10, x.Length)
 
 [<Fact>]
