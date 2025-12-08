@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -6,8 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Day01.fs" />
+    <Compile Include="FileLoader.fs" />
     <Compile Include="Day02.fs" />
+    <Compile Include="Day01.fs" />
   </ItemGroup>
 
 </Project>

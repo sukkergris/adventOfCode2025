@@ -1,6 +1,5 @@
-﻿module Tests
+﻿module Day01.test
 
-open System
 open Xunit
 open AdventOfCode.DeScrambler
 

@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Tests.fs" />
+    <Compile Include="Day01.test.fs" />
+    <Compile Include="Day02.test.fs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +20,10 @@
     <ProjectReference Include="..\AdventOfCode\AdventOfCode.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\x.txt">
+    <Content Include="TestData\day01.test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\day02.test.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
 </ItemGroup>
