@@ -1,0 +1,16 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"fsharp"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
+
+#!fsharp
+
+open System.Text.RegularExpressions
+
+let pattern = @"^((?!0|10)\d+)\1$"
+let regex = Regex(pattern)
+
+let nomatch = "1231234"
+let matched = "123123"
+
+regex.IsMatch(nomatch)
+regex.IsMatch(matched)
