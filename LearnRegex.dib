@@ -6,11 +6,13 @@
 
 open System.Text.RegularExpressions
 
-let pattern = @"^((?!0|10)\d+)\1$"
+let pattern = @"^((?!0|101)\d+)\1$"
 let regex = Regex(pattern)
 
 let nomatch = "1231234"
 let matched = "123123"
+let legal = "101"
 
-regex.IsMatch(nomatch)
-regex.IsMatch(matched)
+// regex.IsMatch(nomatch)
+// regex.IsMatch(matched)
+regex.IsMatch(legal)
