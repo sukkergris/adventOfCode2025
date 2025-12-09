@@ -37,11 +37,10 @@ module GiftShop =
         System.IO.File.WriteAllLines (path, lines)
 
 
-    let filter (path: string) =
+    let filter (path: string) (regex: string) =
         let products = productIds path
 
-        let pattern = @"^((?!0)\d+)\1$"
-        let regex = Regex(pattern)
+        let regex = Regex(regex)
 
         let filtered = products |> List.collect toListOfStrings
                     |> List.filter (fun x ->
@@ -52,3 +51,5 @@ module GiftShop =
 // 1846542800809725
 // 1846542800809725L (12850231731L)
 // 12850231731L
+
+// 2850231731
