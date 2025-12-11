@@ -5,5 +5,5 @@ open AdventOfCodeRunner
 module Program =
     [<EntryPoint>]
     let main argv =
-        GiftShop.run()
+        Lobby.run()
         0

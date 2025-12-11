@@ -50,7 +50,7 @@ module GiftShop =
 // Guesses:
 // 1846542800809725
 // 1846542800809725L (12850231731L)
-// Star 12850231731L
+// Star 12850231731L (Curses - I had it all along)
 
 // 2850231731
 

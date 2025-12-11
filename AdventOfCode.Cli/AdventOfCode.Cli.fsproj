@@ -5,10 +5,11 @@
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup><Compile Include="P01.fs" />
-    
-    
-    <Compile Include="P02.fs" /><Compile Include="Program.fs" />
+  <ItemGroup>
+    <Compile Include="P01.fs" />
+    <Compile Include="P02.fs" />
+    <Compile Include="P03.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
