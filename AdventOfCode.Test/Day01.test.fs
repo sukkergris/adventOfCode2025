@@ -6,7 +6,7 @@ open AdventOfCode.DeScrambler
 [<Fact>]
 let ``Load data from txt`` () =
 
-    let x = loadLinesFromFile "TestData/x.txt"
+    let x = loadLinesFromFile "TestData/day01.test.txt"
     Assert.Equal<int>(10, x.Length)
 
 [<Fact>]

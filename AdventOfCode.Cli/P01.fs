@@ -4,7 +4,7 @@ open AdventOfCode.DeScrambler
 
 module SecretEntrance =
     let run () =
-        let inputFile = "./x.txt" //"./d01-input.txt"
+        let inputFile = "./AdventOfCode.Test/TestData/day01.test.txt"
         printfn "De scrambling %s" inputFile
 
         let moves = inputFile |> loadLinesFromFile |> loadMoves
