@@ -21,3 +21,5 @@ Reference `..\AdventOfCode\AdventOfCode.fsproj` added to the project.
 |-------------- |---------:|---------:|--------:|---------:|---------:|-----------:|
 | GeminiSolver  | 115.9 us |  1.63 us | 1.45 us |  48.8281 |  19.0430 |  399.42 KB |
 | TheodorSolver | 636.4 us | 11.17 us | 9.90 us | 529.2969 | 170.8984 | 4329.04 KB |
+
+## Day 4 - Game of life
