@@ -19,6 +19,12 @@ regex.IsMatch(legal)
 
 #!fsharp
 
+let arr = [|1;2;3;4;5|]
+let x = arr.[1 .. arr.Length]
+printfn "%A" x
+
+#!fsharp
+
 let ciffers2Multiplier (ciffers: int) =
     System.Math.Pow(10.0, float ciffers - 1.0)
 
