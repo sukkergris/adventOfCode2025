@@ -4,4 +4,4 @@ open AdventOfCode.Lobby
 
 module Lobby =
     let run () =
-        printfn "%A" ( "./AdventOfCode.Test/TestData/day03.01.test.txt" |> answer_ )
+        printfn "%A" ( "./AdventOfCode.Test/TestData/day03.01.test.txt" |> maxJoltageUsingNBatteries )

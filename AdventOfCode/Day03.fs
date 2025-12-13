@@ -12,7 +12,7 @@ module Lobby =
             next
     let emptyIterItem = { index = -1; value = -1 }
 
-    let answer_ filePath =
+    let maxJoltageUsingNBatteries filePath n=
         let list = filePath
                 |> loadLinesFromFile
                 |> List.toArray
