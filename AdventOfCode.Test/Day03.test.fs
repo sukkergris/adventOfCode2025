@@ -13,10 +13,12 @@ let ``Answer from test data`` () =
     let answer = maxJoltageUsingNBatteries "TestData/day03.01.test.txt" 2
     Assert.Equal(357L, answer)
 
-[<Fact>]
-let ``Answer for level 1`` () =
-    let answer = maxJoltageUsingNBatteries "TestData/day03.01.txt" 2
-    Assert.Equal(17403L, answer)
+[<Theory>]
+[<InlineData(2,17403L)>]
+[<InlineData(12,173416889848394L)>]
+let ``Answer for level 1`` (n,expected) =
+    let answer = maxJoltageUsingNBatteries "TestData/day03.01.txt" n
+    Assert.Equal(expected, answer)
 
 [<Theory>]
 [<InlineData("987654321111111",98L)>]
@@ -62,3 +64,4 @@ let ``Answer using 12 batteries`` () =
             |> getVal 12
     let ciffersInV = v |> abs |> string |> String.length
     Assert.Equal(expected=12, actual = ciffersInV)
+
