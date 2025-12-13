@@ -288,3 +288,6 @@ tests/elm-stuff/
 elm-watch-elm.js
 elm-watch-*.js
 
+# Ignore benchmarks
+BenchmarkDotNet.Artifacts
+

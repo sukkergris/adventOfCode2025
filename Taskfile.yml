@@ -14,3 +14,7 @@ tasks:
     desc: Run tests
     cmds:
       - dotnet test
+  benchmarks:
+    desc: Run 'BenchmarkDotNet'
+    cmds:
+      - dotnet run -c Release --project AdventOfCode.Benchmarks
