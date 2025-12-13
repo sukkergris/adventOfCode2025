@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  cli:
+    desc: Run cli
+    cmds:
+      - dotnet run --project AdventOfCode.Cli
+  test:
+    desc: Run tests
+    cmds:
+      - dotnet test

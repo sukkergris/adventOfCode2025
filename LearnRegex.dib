@@ -16,3 +16,11 @@ let legal = "101"
 // regex.IsMatch(nomatch)
 // regex.IsMatch(matched)
 regex.IsMatch(legal)
+
+#!fsharp
+
+let ciffers2Multiplier (ciffers: int) =
+    System.Math.Pow(10.0, float ciffers - 1.0)
+
+[|1;2;3|] |> Array.map(fun x -> x |> ciffers2Multiplier)
+// System.Math.Pow(10.0,0)
