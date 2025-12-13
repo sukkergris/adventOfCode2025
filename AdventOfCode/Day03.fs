@@ -15,8 +15,28 @@ module Lobby =
     let toIterItems (l: int64 array) : iterItem array =
             l |> Array.mapi(fun i y ->  { index = i; value = y })
     let toIntArr (l: string array) = l |> Array.map(fun x -> strArr2NumArr x)
-    let ciffers2Multiplier (ciffers: int) : int64=
+    let ciffers2Multiplier (ciffers: int) : int64 =
         System.Math.Pow(10.0, float ciffers - 1.0) |> int64
+
+    let gemini (ciffers: int) (l: int64 array): int64 =
+        let rec solve remaining startIdx =
+            if remaining = 0 then 0L
+            else
+                // The range we can pick from (equivalent to list.[0..list.Length-ciffers])
+                let searchEnd = l.Length - remaining
+
+                let rec findMax i bestVal bestIdx =
+                    if i > searchEnd then (bestVal, bestIdx)
+                    else
+                        if l.[i] > bestVal then findMax (i + 1) l.[i] i
+                        else
+                            findMax (i + 1) bestVal bestIdx
+
+                let (digitVal, digitIdx) = findMax (startIdx + 1) l.[startIdx] startIdx
+                let m = ciffers2Multiplier remaining
+                digitVal * m + solve (remaining - 1) (digitIdx + 1)
+        solve ciffers 0
+
     let rec getVal (ciffers: int) (l: int64 array): int64 =
         if ciffers = 0 then
             0
@@ -29,22 +49,24 @@ module Lobby =
 
         let noTailList = list.[0..list.Length-ciffers]
 
-        let firstCiffer = noTailList
+        let ciffer = noTailList
                         |>  Array.fold(fun prev next -> maxWithIndex prev next) emptyIterItem
 
-        let rest = l.[firstCiffer.index + 1 .. list.Length]
+        let rest = l.[ciffer.index + 1 .. list.Length]
 
-        firstCiffer.value * (m |>int64) + getVal (ciffers-1) rest
-    let maxJoltageUsingNBatteries filePath n=
+        ciffer.value * m + getVal (ciffers-1) rest
+    let maxJoltageUsingNBatteries solver filePath n=
         let list = filePath
                 |> loadLinesFromFile
                 |> List.toArray
                 |> toIntArr
 
-        list |> Array.map(fun (x:int64 array)-> getVal n x ) |> Array.sum
+        list |> Array.map(fun (x:int64 array)->  solver n x ) |> Array.sum
+
+    let maxJoltageUsingNBatteriesGemini = maxJoltageUsingNBatteries gemini
+
+    let maxJoltageUsingNBatteriesTheodor = maxJoltageUsingNBatteries getVal
 
 // Q2: Answers
 // 7839340789394L - remember to use int64
 // 173416889848394L
-
-

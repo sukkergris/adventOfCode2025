@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["Joltage", "nomatch", "xunit"]
+  "cSpell.words": ["Joltage", "nomatch", "xunit"],
+  "editor.inlayHints.enabled": "offUnlessPressed"
 }

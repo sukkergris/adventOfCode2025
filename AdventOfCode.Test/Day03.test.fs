@@ -5,19 +5,19 @@ open AdventOfCode.Lobby
 
 [<Fact>]
 let ``Answer from extended test data`` () =
-    let answer = maxJoltageUsingNBatteries "TestData/day03.01.extended-test.txt" 2
+    let answer = maxJoltageUsingNBatteriesTheodor "TestData/day03.01.extended-test.txt" 2
     Assert.Equal(478L, answer)
 
 [<Fact>]
 let ``Answer from test data`` () =
-    let answer = maxJoltageUsingNBatteries "TestData/day03.01.test.txt" 2
+    let answer = maxJoltageUsingNBatteriesTheodor "TestData/day03.01.test.txt" 2
     Assert.Equal(357L, answer)
 
 [<Theory>]
 [<InlineData(2,17403L)>]
 [<InlineData(12,173416889848394L)>]
 let ``Answer for level 1`` (n,expected) =
-    let answer = maxJoltageUsingNBatteries "TestData/day03.01.txt" n
+    let answer = maxJoltageUsingNBatteriesTheodor "TestData/day03.01.txt" n
     Assert.Equal(expected, answer)
 
 [<Theory>]
