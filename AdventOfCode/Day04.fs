@@ -14,9 +14,10 @@ module PrintingDepartment =
         lines |> List.mapi(fun y l -> l |> Seq.mapi(fun x c -> { x = x; y = y; c = c } ) |> Seq.toList)
 
     let getAdjacentCoords (p: point) (abscissa: int) (ordinate:int) =
-        [   toCoord p.x (p.y-1);
-            toCoord (p.x-1) p.y; toCoord (p.x+1) p.y ;
-            toCoord p.x (p.y+1)] |> List.filter(fun x -> x.x > -1 && x.x < abscissa && x.y > - 1 && x.y < ordinate)
+        [   toCoord (p.x-1) (p.y-1); toCoord p.x    (p.y-1); toCoord (p.x+1) (p.y-1)
+            toCoord (p.x-1)  p.y   ; toCoord (p.x+1) p.y ;
+            toCoord (p.x-1) (p.y+1); toCoord p.x    (p.y+1); toCoord (p.x+1) (p.y+1) ]
+             |> List.filter(fun x -> x.x > -1 && x.x < abscissa && x.y > - 1 && x.y < ordinate)
 
     let tryFindPointsWithSupport (board: point list list) (coord:coord) =
         board |> List.concat |> List.tryFind(fun p -> p.x =coord.x && p.y = coord.y && p.c = '@') // @ = support
