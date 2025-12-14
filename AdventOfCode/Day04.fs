@@ -21,7 +21,12 @@ module PrintingDepartment =
     let tryFindPointsWithSupport (board: point list list) (coord:coord) =
         board |> List.concat |> List.tryFind(fun p -> p.x =coord.x && p.y = coord.y && p.c = '@') // @ = support
     let board path = path |> getInput |> toBoard
-    let canLiftStatus (p: point) (abscissa: int) (ordinate:int) (board: point list list) =
+
+    let getLiftAbility (p: point) (board: point list list) =
+        if p.c = '.' then p else // Ignore '.'
+        // (abscissa: int) (ordinate:int)
+        let abscissa = board.Length
+        let ordinate = board[0].Length
         let a = getAdjacentCoords p abscissa ordinate
                     |> List.map(fun c-> tryFindPointsWithSupport board c )
                     |> List.filter(fun x -> x.IsSome )
@@ -30,6 +35,9 @@ module PrintingDepartment =
             p
         else
         { p with c = 'x' }
+
+    let getUpdatedBoard (board: point list list) =
+        board |> List.map(fun y -> y |> List.map(fun p -> getLiftAbility p board))
 
     let getAdjacent (board: point list list ) p =
         let adjacentCoords = board |> List.map( fun x -> x |> List.map(fun p ->  getAdjacentCoords p x.Length board.Length  ))

@@ -20,6 +20,36 @@ let ``Get adjacent coords to point`` (x: int, y:int, abscissa:int, ordinate:int,
     let adjacentCoords = getAdjacentCoords p abscissa ordinate
     // printfn "%A" adjacentCoords
     Assert.Equal(expected, adjacentCoords.Length)
+
+[<Fact>]
+let ``Can lift status`` () =
+    let board = "TestData/day04.test.txt"
+                |> getInput
+                |> toBoard
+    let firstLine = board[0]
+    let updatedCell = ({x=3;y=0;c='@'},board) ||> getLiftAbility
+    Assert.Equal(updatedCell.c, 'x')
+
+[<Fact>]
+let ``Updated board`` () =
+    let updatedBoard = "TestData/day04.test.txt"
+                    |> getInput
+                    |> toBoard
+                    |> getUpdatedBoard
+    // printfn "%A" updatedBoard[0]
+    let referenceBoard = "TestData/day04.test.result.txt"
+                        |> getInput
+                        |> toBoard
+    // printfn "%A" referenceBoard[0]
+    let flatReference = List.concat referenceBoard
+    let flatUpdated = updatedBoard |> List.concat
+        // Get differences
+    let diffs =
+        List.zip flatReference flatUpdated
+        |> List.filter (fun (expected, actual) -> expected <> actual)
+    printfn "%A" diffs
+    Assert.Equal<point list>(flatReference,flatUpdated)
+
 [<Fact>]
 let ``tryFindPointsWithSupport returns Some when support point exists`` () =
     let board = [
