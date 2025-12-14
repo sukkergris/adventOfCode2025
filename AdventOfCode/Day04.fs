@@ -50,3 +50,18 @@ module PrintingDepartment =
         let updChars = updRow |> List.map (fun p -> p.c) |> List.toArray |> System.String
         let marker = if refChars = updChars then " " else "*"
         printfn "%s | %s %s" refChars updChars marker)
+
+    let removeX (board: point list list) =
+            board |> List.map(fun x -> x |> List.map(fun p -> if p.c = 'x' then { p with c = '.'} else p))
+
+    let rec runGame board =
+        let nextMove = board |> getUpdatedBoard
+
+        view board nextMove
+
+        let flatNextMove = nextMove |> List.concat
+        let anyMovableInNextMove = flatNextMove |> List.exists(fun x -> x.c ='x')
+        if anyMovableInNextMove then
+            nextMove  |> removeX |> runGame
+        else
+            board
