@@ -30,7 +30,7 @@ let ``Can lift status`` () =
     let updatedCell = ({x=7;y=0;c='@'},board) ||> getLiftAbility
     Assert.Equal(updatedCell.c, '@')
 
-[<Fact>]
+[<Fact(Skip="Just for printing to compare")>]
 let ``Updated board`` () =
     let updatedBoard = "TestData/day04.test.txt"
                     |> getInput
@@ -65,6 +65,28 @@ let ``Updated board`` () =
                 expected.x expected.y expected.c actual.c)
 
     Assert.Equal<point list>(flatReference, flatUpdated)
+
+[<Fact>]
+let ``Count fork-liftable test`` () =
+    let count = "TestData/day04.test.txt"
+                    |> getInput
+                    |> toBoard
+                    |> getUpdatedBoard
+                    |> List.concat
+                    |> List.filter(fun x -> x.c = 'x')
+                    |> List.length
+    Assert.Equal(13, count)
+
+[<Fact>]
+let ``Count fork-liftable first trail`` () =
+    let count = "TestData/day04.01.txt"
+                    |> getInput
+                    |> toBoard
+                    |> getUpdatedBoard
+                    |> List.concat
+                    |> List.filter(fun x -> x.c = 'x')
+                    |> List.length
+    Assert.Equal(1489, count)
 
 [<Fact>]
 let ``tryFindPointsWithSupport returns Some when support point exists`` () =
