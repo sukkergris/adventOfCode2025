@@ -20,3 +20,23 @@ let ``Get adjacent coords to point`` (x: int, y:int, abscissa:int, ordinate:int,
     let adjacentCoords = getAdjacentCoords p abscissa ordinate
     // printfn "%A" adjacentCoords
     Assert.Equal(expected, adjacentCoords.Length)
+[<Fact>]
+let ``tryFindPointsWithSupport returns Some when support point exists`` () =
+    let board = [
+        [ { x = 0; y = 0; c = '.' }; { x = 1; y = 0; c = '@' } ]
+        [ { x = 0; y = 1; c = '.' }; { x = 1; y = 1; c = '.' } ]
+    ]
+    let coord = { x = 1; y = 0 }
+    let result = tryFindPointsWithSupport board coord
+    Assert.True(result.IsSome)
+    Assert.Equal('@', result.Value.c)
+
+[<Fact>]
+let ``tryFindPointsWithSupport returns None when no support point exists`` () =
+    let board = [
+        [ { x = 0; y = 0; c = '.' }; { x = 1; y = 0; c = '.' } ]
+        [ { x = 0; y = 1; c = '.' }; { x = 1; y = 1; c = '.' } ]
+    ]
+    let coord = { x = 1; y = 0 }
+    let result = tryFindPointsWithSupport board coord
+    Assert.True(result.IsNone)
