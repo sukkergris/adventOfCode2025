@@ -39,3 +39,14 @@ module PrintingDepartment =
 
     let getUpdatedBoard (board: point list list) =
         board |> List.map(fun y -> y |> List.map(fun p -> getLiftAbility p board))
+
+    let view right left=
+            // Print side-by-side comparison
+        printfn "\n%s | %s" "Expected" "Actual"
+        printfn "%s-+-%s" (String.replicate 10 "-") (String.replicate 10 "-")
+        List.zip right left
+                    |> List.iter (fun (refRow, updRow) ->
+        let refChars = refRow |> List.map (fun p -> p.c) |> List.toArray |> System.String
+        let updChars = updRow |> List.map (fun p -> p.c) |> List.toArray |> System.String
+        let marker = if refChars = updChars then " " else "*"
+        printfn "%s | %s %s" refChars updChars marker)
