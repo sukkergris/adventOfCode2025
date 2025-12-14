@@ -39,10 +39,3 @@ module PrintingDepartment =
 
     let getUpdatedBoard (board: point list list) =
         board |> List.map(fun y -> y |> List.map(fun p -> getLiftAbility p board))
-
-    let getAdjacent (board: point list list ) p =
-        let adjacentCoords = board |> List.map( fun x -> x |> List.map(fun p ->  getAdjacentCoords p x.Length board.Length  ))
-        0
-
-
-    let run = 0

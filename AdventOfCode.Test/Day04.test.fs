@@ -68,22 +68,31 @@ let ``Updated board`` () =
 
 [<Fact>]
 let ``Count fork-liftable test`` () =
-    let count = "TestData/day04.test.txt"
+    let updated = "TestData/day04.test.txt"
                     |> getInput
                     |> toBoard
                     |> getUpdatedBoard
                     |> List.concat
-                    |> List.filter(fun x -> x.c = 'x')
-                    |> List.length
-    Assert.Equal(13, count)
+    let countForkLiftable = updated
+                            |> List.filter(fun x -> x.c = 'x')
+                            |> List.length
+    Assert.Equal(13, countForkLiftable)
+
+    let countRolles = updated
+                        |> List.filter(fun x-> x.c = '@')
+                        |> List.length
+    Assert.Equal(58,countRolles)
+
+
 
 [<Fact>]
 let ``Count fork-liftable first trail`` () =
-    let count = "TestData/day04.01.txt"
+    let updated = "TestData/day04.01.txt"
                     |> getInput
                     |> toBoard
                     |> getUpdatedBoard
                     |> List.concat
+    let count = updated
                     |> List.filter(fun x -> x.c = 'x')
                     |> List.length
     Assert.Equal(1489, count)
