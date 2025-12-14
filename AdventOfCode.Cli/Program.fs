@@ -5,5 +5,5 @@ open AdventOfCodeRunner
 module Program =
     [<EntryPoint>]
     let main argv =
-        Lobby.run()
+        PrintingDepartment.run()
         0
