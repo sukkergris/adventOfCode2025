@@ -14,7 +14,7 @@ module PrintingDepartment =
         let rec runGame board =
             let nextMove = board |> getUpdatedBoard
 
-            // view board nextMove
+            view board nextMove
 
             let flatNextMove = nextMove |> List.concat
             let anyMovableInNextMove = flatNextMove |> List.exists(fun x -> x.c ='x')
