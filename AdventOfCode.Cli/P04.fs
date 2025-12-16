@@ -13,13 +13,15 @@ module PrintingDepartment =
             "TestData",
             "day04.01.txt")
 
-        let b = path//"./AdventOfCode.Test/TestData/day04.01.txt"
+        let b = path //"./AdventOfCode.Test/TestData/day04.01.txt"
                 |> getInput
                 |> toBoard
-
-        let final = b |> runGame
+        let abscissa = b[0].Length
+        let ordinate = b.Length
+        let flattenedBoard = b |> List.concat
+        let final =  runGame flattenedBoard abscissa ordinate
         let countOnboard board c =
-            printfn "%A" (board |> List.concat |> List.countBy(fun x -> x.c = c) )
+            printfn "%A" (board |> List.countBy(fun x -> x.c = c) )
 
-        countOnboard b '@'
+        countOnboard flattenedBoard '@'
         countOnboard final '@'

@@ -2,6 +2,7 @@ namespace AdventOfCode
 
 open AdventOfCode.FileHandler
 module PrintingDepartment =
+    open System
     let getInput path =
         let lines = path |> loadLinesFromFile
         lines
@@ -19,17 +20,15 @@ module PrintingDepartment =
             toCoord (p.x-1) (p.y+1); toCoord p.x    (p.y+1); toCoord (p.x+1) (p.y+1) ]
              |> List.filter(fun x -> x.x > -1 && x.x < abscissa && x.y > - 1 && x.y < ordinate)
 
-    let tryFindPointsWithSupport (board: point list list) (coord:coord) =
-        board |> List.concat |> List.tryFind(fun p -> p.x =coord.x && p.y = coord.y && p.c = '@') // @ = support
+    let tryFindPointsWithSupport (flattenedBoard: point list) (coord:coord) =
+        flattenedBoard |> List.tryFind(fun p -> p.x =coord.x && p.y = coord.y && p.c = '@') // @ = support
     let board path = path |> getInput |> toBoard
 
-    let getLiftAbility (p: point) (board: point list list) =
+    let getLiftAbility (p: point) (flattenedBoard: point list) (abscissa: int) (ordinate: int) =
         if p.c = '.' then p else // Ignore '.'
         // (abscissa: int) (ordinate:int)
-        let abscissa = board.Length
-        let ordinate = board[0].Length
         let a = getAdjacentCoords p abscissa ordinate
-                    |> List.map(fun c-> tryFindPointsWithSupport board c )
+                    |> List.map(fun c-> tryFindPointsWithSupport flattenedBoard c )
                     |> List.filter(fun x -> x.IsSome )
                     |> List.length
         if a >= 4 then
@@ -37,10 +36,11 @@ module PrintingDepartment =
         else
         { p with c = 'x' }
 
-    let getUpdatedBoard (board: point list list) =
-        board |> List.map(fun y -> y |> List.map(fun p -> getLiftAbility p board))
+    let getUpdatedBoard (board: point list) (abscissa: int) (ordinate: int)=
+        board |> List.map(fun p -> getLiftAbility p board abscissa ordinate)
 
-    let view right left=
+    let view right left =
+        Console.SetCursorPosition(0, 0)
             // Print side-by-side comparison
         printfn "\n%s | %s" "Expected" "Actual"
         printfn "%s-+-%s" (String.replicate 10 "-") (String.replicate 10 "-")
@@ -51,17 +51,16 @@ module PrintingDepartment =
         let marker = if refChars = updChars then " " else "*"
         printfn "%s | %s %s" refChars updChars marker)
 
-    let removeX (board: point list list) =
-            board |> List.map(fun x -> x |> List.map(fun p -> if p.c = 'x' then { p with c = '.'} else p))
+    let removeX (board: point list) =
+            board |> List.map(fun p -> if p.c = 'x' then { p with c = '.'} else p)
 
-    let rec runGame board =
-        let nextMove = board |> getUpdatedBoard
+    let rec runGame (board: point list) (abscissa: int) (ordinate: int)=
+        let nextMove = getUpdatedBoard board abscissa ordinate
 
-        view board nextMove
+        // view board nextMove
 
-        let flatNextMove = nextMove |> List.concat
-        let anyMovableInNextMove = flatNextMove |> List.exists(fun x -> x.c ='x')
+        let anyMovableInNextMove = nextMove |> List.exists(fun x -> x.c ='x')
         if anyMovableInNextMove then
-            nextMove  |> removeX |> runGame
+            runGame (removeX nextMove) abscissa ordinate
         else
             board
