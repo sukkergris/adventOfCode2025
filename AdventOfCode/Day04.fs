@@ -46,7 +46,7 @@ module PrintingDepartment =
         printfn "%s-+-%s" (String.replicate 10 "-") (String.replicate 10 "-")
         List.zip right left
                     |> List.iter (fun (refRow, updRow) ->
-        let refChars = refRow |> List.map (fun p -> p.c) |> List.toArray |> System.String
+        let refChars = refRow |> List.map _.c |> List.toArray |> System.String
         let updChars = updRow |> List.map (fun p -> p.c) |> List.toArray |> System.String
         let marker = if refChars = updChars then " " else "*"
         printfn "%s | %s %s" refChars updChars marker)

@@ -19,8 +19,14 @@ regex.IsMatch(legal)
 
 #!fsharp
 
+open System.Text.RegularExpressions
+
+let pattern =
+
+#!fsharp
+
 let arr = [|1;2;3;4;5|]
-let x = arr.[1 .. arr.Length]
+let x = arr.[1 .. arr.Length-2]
 printfn "%A" x
 
 #!fsharp
