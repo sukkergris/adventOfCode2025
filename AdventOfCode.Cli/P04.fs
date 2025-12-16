@@ -5,6 +5,7 @@ open System.IO
 open AdventOfCode.PrintingDepartment
 
 module PrintingDepartment =
+    open System.Diagnostics
     let run () =
         let path =
             Path.Combine(
