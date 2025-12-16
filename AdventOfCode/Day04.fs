@@ -54,10 +54,25 @@ module PrintingDepartment =
     let removeX (board: point list) =
             board |> List.map(fun p -> if p.c = 'x' then { p with c = '.'} else p)
 
+    let print (board: point list) : unit =
+        Console.SetCursorPosition(0, 1)
+        board
+        |> List.groupBy (fun i -> i.y)
+        |> List.sortBy (fun (y, _) -> y)
+        |> List.iter (fun (_, v) ->
+            v |> List.map (fun p -> p.c)
+              |> Array.ofList
+              |> System.String
+              |> printfn "%s"
+        )
+
+
+
+
     let rec runGame (board: point list) (abscissa: int) (ordinate: int)=
         let nextMove = getUpdatedBoard board abscissa ordinate
 
-        // view board nextMove
+        print board
 
         let anyMovableInNextMove = nextMove |> List.exists(fun x -> x.c ='x')
         if anyMovableInNextMove then
